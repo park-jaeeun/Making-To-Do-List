@@ -4,12 +4,17 @@ const toDoForm = document.querySelector(".js-toDoForm"),
 
 const TODOS_LS = "toDos";
 
-const toDos = [];
+let toDos = [];
 
 function deleteToDo(event) {
     const btn = event.target;
     const li = btn.parentNode;
     toDoList.removeChild(li);
+    const cleanToDos = toDos.filter(function(toDo){
+       return toDo.id !== parseInt(li.id); 
+    });
+    toDos = cleanToDos; // delBtn 누른 후의 리스트로 대체하기.
+    saveToDos();        //localStorage에 저장해서 reload해도 지운 리스트가 뜨도록함.
 }
 
 function saveToDos() {
