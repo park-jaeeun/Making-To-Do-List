@@ -1,6 +1,19 @@
-const API_KEY = "67c24faad82fd3c026ae6d35dc48c6da";
+const weather = document.querySelector(".js-weather");
 
+const API_KEY = "67c24faad82fd3c026ae6d35dc48c6da";
 const COORDS = "coords"
+
+function getWeather(lat, lon) {
+    fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+    ).then(function(response) {
+        return response.json();
+    }).then(function(json) {
+        const temperature = json.main.temp;
+        const place = json.name;
+        weather.innerHTML = `${temperature} @ ${place}`;
+    });
+}
 
 function saveCoords(coordsObj) {
     localStorage.setItem(COORDS, JSON.stringify(coordsObj));
@@ -16,6 +29,7 @@ function handleGeoSucces(position) {
         //longitude 와 같은 표현.
     };
     saveCoords(coordsObj);
+    getWeather(latitude, longitude);
 }
 
 function handleGeoError() {
@@ -32,7 +46,8 @@ function loadCoords() {
         askForCoords();
     }
     else{
-        //gerWeather 
+        const parsedCoords = JSON.parse(loadedCoords);
+        getWeather(parsedCoords.latitude, parsedCoords.longitude);
     }
 }
 
